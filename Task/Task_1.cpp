@@ -2,6 +2,7 @@
 #include <vector>
 #include <climits>
 #include <queue>
+#include <stack>
 
 class Graph {
   private:
@@ -9,6 +10,7 @@ class Graph {
     std::vector <std::vector<std::pair<int, int>>> adj;
     std::vector <int> path;
     std::vector <int> dist;
+    std::vector <bool> visited;
     std::vector <int> prev;
   public:
     Graph(){
@@ -23,6 +25,7 @@ class Graph {
       addEdge(10, 7, 9);addEdge(10, 8, 2);addEdge(10, 9, 4);
       dist.resize(V, INT_MAX);
       prev.resize(V, -1);
+      visited.resize(V, false);
     }
     void addEdge(int u, int v, int w){
       adj[u].push_back({v, w});
@@ -35,15 +38,45 @@ class Graph {
       while(!pq.empty()){
         int u = pq.top().second;
         pq.pop();
+        if(visited[u]) continue;
         for(auto i: adj[u]){
           int v = i.first;
           int w = i.second;
+          if (visited[v]) continue;
           if(dist[v] > dist[u] + w){
             dist[v] = dist[u] + w;
             pq.push({dist[v], v});
+            prev[v] = u;
           }
+          visited[u] = true;
         }
       }
+      printPath(start, target);
+      for(int i=0;i<V;i++) std::cout << "Distance from " << oneIndexedVertex(start) << " to " << oneIndexedVertex(i) << " is " << dist[i] << std::endl;
+    }
+
+    void printPath(int start, int target){
+      if(dist[target] == INT_MAX){
+        std::cout << "No path found" << std::endl;
+        return;
+      }
+
+      std::stack <int> s;
+      int u = target;
+      while(u != -1){
+        s.push(u);
+        u = prev[u];
+      }
+      std::cout << "Path: ";
+      while(!s.empty()){
+        std::cout << oneIndexedVertex(s.top()) << " ";
+        s.pop();
+      }
+      std::cout << "\n";
+    }
+
+    int oneIndexedVertex(int vertex){
+      return vertex + 1;
     }
 };
 
