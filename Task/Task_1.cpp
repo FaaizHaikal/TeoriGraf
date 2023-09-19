@@ -23,13 +23,19 @@ class Graph {
       addEdge(6, 3, 9);addEdge(6, 9, 1);
       addEdge(8, 4, 9);addEdge(8, 5, 6);addEdge(8, 6, 3);addEdge(8, 7, 7);addEdge(8, 9, 1);
       addEdge(10, 7, 9);addEdge(10, 8, 2);addEdge(10, 9, 4);
-      dist.resize(V, INT_MAX);
-      prev.resize(V, -1);
-      visited.resize(V, false);
+      reset();
     }
     void addEdge(int u, int v, int w){
       adj[u].push_back({v, w});
       adj[v].push_back({u, w});
+    }
+    void reset(){
+      dist.clear();
+      dist.resize(V, INT_MAX);
+      prev.clear();
+      prev.resize(V, -1);
+      visited.clear();
+      visited.resize(V, false);
     }
     void dijkstra(int start, int target){
       dist[start] = 0;
@@ -51,6 +57,37 @@ class Graph {
           visited[u] = true;
         }
       }
+      printPath(start, target);
+      for(int i=0;i<V;i++) std::cout << "Distance from " << oneIndexedVertex(start) << " to " << oneIndexedVertex(i) << " is " << dist[i] << std::endl;
+    }
+
+    // Bellman Ford function
+    void bellmanFord(int start, int target){
+      dist[start] = 0;
+      for(int i=0;i<V-1;i++){
+        for(int u=0;u<V;u++){
+          for(auto j: adj[u]){
+            int v = j.first;
+            int w = j.second;
+            if(dist[v] > dist[u] + w){
+              dist[v] = dist[u] + w;
+              prev[v] = u;
+            }
+          }
+        }
+      }
+
+      for(int u=0;u<V;u++){
+        for(auto j: adj[u]){
+          int v = j.first;
+          int w = j.second;
+          if(dist[v] > dist[u] + w){
+            std::cout << "Negative cycle found" << std::endl;
+            return;
+          }
+        }
+      }
+      
       printPath(start, target);
       for(int i=0;i<V;i++) std::cout << "Distance from " << oneIndexedVertex(start) << " to " << oneIndexedVertex(i) << " is " << dist[i] << std::endl;
     }
