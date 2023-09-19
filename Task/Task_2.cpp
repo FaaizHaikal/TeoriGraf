@@ -13,13 +13,34 @@ class Graph {
     std::string alg;
 
   public:
-    Graph(){
-      V = 7;
-      adj.resize(V);
-      mst.resize(V);
-      addEdge(adj, 0, 1, 7);addEdge(adj, 0, 2, 6);addEdge(adj, 0, 3, 2);addEdge(adj, 0, 4, 3);addEdge(adj, 0, 5, 4);addEdge(adj, 0, 6, 3);
-      addEdge(adj, 1, 2, 6);addEdge(adj, 2, 3, 6);addEdge(adj, 3, 4, 2);addEdge(adj, 4, 5, 3);addEdge(adj, 5, 6, 1);addEdge(adj, 6, 1, 8);
+    Graph(int question){
+      if (question == 1) {
+        V = 7;
+        adj.resize(V);
+        mst.resize(V);
+        addEdge(adj, 0, 1, 7);addEdge(adj, 0, 2, 6);addEdge(adj, 0, 3, 2);addEdge(adj, 0, 4, 3);addEdge(adj, 0, 5, 4);addEdge(adj, 0, 6, 3);
+        addEdge(adj, 1, 2, 6);addEdge(adj, 2, 3, 6);addEdge(adj, 3, 4, 2);addEdge(adj, 4, 5, 3);addEdge(adj, 5, 6, 1);addEdge(adj, 6, 1, 8);
+      } else if (question == 3) {
+        V = 10;
+        adj.resize(V);
+        mst.resize(V);
+        addEdge(adj, 0, 1, 1);addEdge(adj, 0, 2, 7);addEdge(adj, 0, 3, 6);
+        addEdge(adj, 1, 5, 2);addEdge(adj, 1, 8, 3);
+        addEdge(adj, 2, 5, 11);addEdge(adj, 2, 4, 12);
+        addEdge(adj, 3, 4, 8);addEdge(adj, 3, 9, 5);
+        addEdge(adj, 4, 7, 13);
+        addEdge(adj, 5, 6, 15);
+        addEdge(adj, 6, 7, 14);addEdge(adj, 6, 8, 10);
+        addEdge(adj, 7, 9, 9);
+        addEdge(adj, 8, 9, 4);
+      } else {
+        throw std::invalid_argument("Invalid question number");
+      }
+
       reset();
+      kruskal();
+      boruvka();
+      prim(0);
     }
 
     void addEdge(std::vector <std::vector<std::pair<int, int>>> &Graph, int u, int v, int w){
@@ -177,14 +198,14 @@ class Graph {
     }
 
     void printMST(int cost, std::string &alg){
-      std::cout << "---" << alg << "---" << std::endl;
-      std::cout << "Minimum spanning tree cost: " << cost << std::endl;
+      std::cout << "---" << alg << "---" << "\n";
+      std::cout << "Minimum spanning tree cost: " << cost << "\n";
       for(int i = 0; i < V; i++){
         std::cout << "Vertex " << oneIndexedVertex(i) << " is connected to: ";
         for(auto j: mst[i]){
           std::cout << oneIndexedVertex(j.first) << " ";
         }
-        std::cout << std::endl;
+        std::cout << "\n";
       }
     }
 
@@ -194,7 +215,9 @@ class Graph {
 };
 
 int main(){
-  Graph myGraph;
-  myGraph.boruvka();
+  int question;
+  std::cout << "Which question? 1 or 3?\n";
+  std::cin >> question;
+  Graph myGraph(question);
   return 0;
 }
