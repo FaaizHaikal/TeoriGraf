@@ -15,7 +15,6 @@ class Graph {
     int V;
     std::vector <std::vector<std::pair<int, int>>> adj;
     std::vector <std::vector<std::pair<int, int>>> mst;
-    std::string alg;
     int total_edge;
     int question;
 
@@ -100,7 +99,7 @@ class Graph {
       }
     }
     void kruskal(){
-      alg = "Kruskal";
+      std::string alg = "Kruskal";
 
       std::vector <std::pair<int, std::pair<int, int>>> edges;
       std::vector <int> parent(V);
@@ -132,7 +131,7 @@ class Graph {
     }
 
     void boruvka(){
-      alg = "Boruvka";
+      std::string alg = "Boruvka";
 
       std::vector <int> parent(V);
       std::vector <int> rank(V, 0);
@@ -178,7 +177,7 @@ class Graph {
     }
 
     void prim(int source){
-      alg = "Prim";
+      std::string alg = "Prim";
 
       std::vector <std::pair<int, std::pair<int, int>>> edges;
       std::vector <bool> added(V, false);
