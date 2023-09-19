@@ -1,3 +1,8 @@
+// Programmer : Faa'iz Haikal Hilmi            Date: 20th September 2023
+// NRP        : 5025221219                     Class: Teori Graf E
+// Lecturer   : Victor Hariadi, S. Si, M. Kom
+// Description: This program is used to find the minimum spanning tree of a graph using Kruskal's, Boruvka's and Prim's algorithm
+
 #include <iostream>
 #include <vector>
 #include <climits>
