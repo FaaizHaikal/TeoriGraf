@@ -16,16 +16,24 @@ class Graph {
     std::vector <std::vector<std::pair<int, int>>> adj;
     std::vector <std::vector<std::pair<int, int>>> mst;
     std::string alg;
+    int total_edge;
+    int question;
 
   public:
     Graph(int question){
-      if (question == 1) {
+      this->question = question;
+      initGraph();
+      runAlgorithms();
+    }
+
+    void initGraph(){
+      if (this->question == 1) {
         V = 7;
         adj.resize(V);
         mst.resize(V);
         addEdge(adj, 0, 1, 7);addEdge(adj, 0, 2, 6);addEdge(adj, 0, 3, 2);addEdge(adj, 0, 4, 3);addEdge(adj, 0, 5, 4);addEdge(adj, 0, 6, 3);
         addEdge(adj, 1, 2, 6);addEdge(adj, 2, 3, 6);addEdge(adj, 3, 4, 2);addEdge(adj, 4, 5, 3);addEdge(adj, 5, 6, 1);addEdge(adj, 6, 1, 8);
-      } else if (question == 3) {
+      } else if (this->question == 3) {
         V = 10;
         adj.resize(V);
         mst.resize(V);
@@ -38,11 +46,15 @@ class Graph {
         addEdge(adj, 6, 7, 14);addEdge(adj, 6, 8, 10);
         addEdge(adj, 7, 9, 9);
         addEdge(adj, 8, 9, 4);
+        total_edge = 1+7+6+2+3+11+12+8+5+13+15+14+10+9+4;
       } else {
         throw std::invalid_argument("Invalid question number");
       }
 
       reset();
+    }
+
+    void runAlgorithms(){
       kruskal();
       boruvka();
       prim(0);
@@ -205,6 +217,9 @@ class Graph {
     void printMST(int cost, std::string &alg){
       std::cout << "---" << alg << "---" << "\n";
       std::cout << "Minimum spanning tree cost: " << cost << "\n";
+      if (question == 3) {
+        std::cout << "Need to remove " << total_edge - cost << " edge costs\n";
+      }
       for(int i = 0; i < V; i++){
         std::cout << "Vertex " << oneIndexedVertex(i) << " is connected to: ";
         for(auto j: mst[i]){
