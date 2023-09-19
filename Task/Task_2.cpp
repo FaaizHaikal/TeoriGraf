@@ -20,20 +20,20 @@ class Graph {
     int question;
 
   public:
-    Graph(int question){
-      this->question = question;
+    Graph(int num){
+      question = num;
       initGraph();
       runAlgorithms();
     }
 
     void initGraph(){
-      if (this->question == 1) {
+      if (question == 1) {
         V = 7;
         adj.resize(V);
         mst.resize(V);
         addEdge(adj, 0, 1, 7);addEdge(adj, 0, 2, 6);addEdge(adj, 0, 3, 2);addEdge(adj, 0, 4, 3);addEdge(adj, 0, 5, 4);addEdge(adj, 0, 6, 3);
         addEdge(adj, 1, 2, 6);addEdge(adj, 2, 3, 6);addEdge(adj, 3, 4, 2);addEdge(adj, 4, 5, 3);addEdge(adj, 5, 6, 1);addEdge(adj, 6, 1, 8);
-      } else if (this->question == 3) {
+      } else if (question == 3) {
         V = 10;
         adj.resize(V);
         mst.resize(V);
