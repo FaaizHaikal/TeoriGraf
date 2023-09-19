@@ -65,42 +65,47 @@ class Graph {
 
     // Boruvka's algorithm
     void boruvka(){
-      std::vector<int> parent(V), rank(V, 0);
+      std::vector <int> parent(V);
+      std::vector <int> rank(V, 0);
       initSet(parent);
-
-      std::vector<std::pair<int, std::pair<int, int>>> cheapest(3, {-1, {-1, -1}});
-      int numTrees = V;
       int cost = 0;
-
-      while(numTrees > 1){
-        for(int i = 0; i < V; i++){
-          cheapest[i] = {-1, {-1, -1}};
-        }
+      while(true){
+        std::vector <std::pair<int, std::pair<int, int>>> cheapest(V, {-1, {-1, -1}});
         for(int i = 0; i < V; i++){
           for(auto j: adj[i]){
-            int set1 = findSet(parent, i);
-            int set2 = findSet(parent, j.first);
-            if(set1 == set2) continue;
-            if(cheapest[set1].first == -1 || cheapest[set1].first > j.second){
-              cheapest[set1] = {j.second, {i, j.first}};
+            int u = i;
+            int v = j.first;
+            int w = j.second;
+            int x = findSet(parent, u);
+            int y = findSet(parent, v);
+            if(x == y) continue;
+            if(cheapest[x].first == -1 || cheapest[x].first > w){
+              cheapest[x] = {w, {u, v}};
             }
-            if(cheapest[set2].first == -1 || cheapest[set2].first > j.second){
-              cheapest[set2] = {j.second, {i, j.first}};
+            if(cheapest[y].first == -1 || cheapest[y].first > w){
+              cheapest[y] = {w, {u, v}};
             }
           }
         }
+        bool done = true;
         for(int i = 0; i < V; i++){
           if(cheapest[i].first == -1) continue;
-          int set1 = findSet(parent, cheapest[i].second.first);
-          int set2 = findSet(parent, cheapest[i].second.second);
-          if(set1 == set2) continue;
-          cost += cheapest[i].first;
-          unionSetByRank(parent, rank, set1, set2);
-          numTrees--;
+          int u = cheapest[i].second.first;
+          int v = cheapest[i].second.second;
+          int w = cheapest[i].first;
+          int x = findSet(parent, u);
+          int y = findSet(parent, v);
+          if(x == y) continue;
+          unionSetByRank(parent, rank, u, v);
+          mst[u].push_back({v, w});
+          mst[v].push_back({u, w});
+          cost += w;
+          done = false;
         }
+        if(done) break;
       }
-      
       printMST(cost);
+      reset();
     }
 
     // Prim's algorithm
