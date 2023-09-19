@@ -10,7 +10,8 @@ class Graph {
     int V;
     std::vector <std::vector<std::pair<int, int>>> adj;
     std::vector <std::vector<std::pair<int, int>>> mst;
-    std::vector <bool> added;
+    std::string alg;
+
   public:
     Graph(){
       V = 7;
@@ -27,8 +28,6 @@ class Graph {
     }
 
     void reset(){
-      added.clear();
-      added.resize(V, false);
       mst.clear();
       mst.resize(V);
     }
@@ -62,13 +61,46 @@ class Graph {
         }
       }
     }
+    void kruskal(){
+      alg = "Kruskal";
 
-    // Boruvka's algorithm
+      std::vector <std::pair<int, std::pair<int, int>>> edges;
+      std::vector <int> parent(V);
+      initSet(parent);
+      int cost = 0;
+
+      for(int i = 0; i < V; i++){
+        for(auto j: adj[i]){
+          int u = i;
+          int v = j.first;
+          int w = j.second;
+          edges.push_back({w, {u, v}});
+        }
+      }
+      std::sort(edges.begin(), edges.end());
+      for(auto i: edges){
+        int u = i.second.first;
+        int v = i.second.second;
+        int w = i.first;
+        int x = findSet(parent, u);
+        int y = findSet(parent, v);
+        if(x == y) continue;
+        unionSet(parent, u, v);
+        addEdge(mst, u, v, w);
+        cost += w;
+      }
+      printMST(cost, alg);
+      reset();
+    }
+
     void boruvka(){
+      alg = "Boruvka";
+
       std::vector <int> parent(V);
       std::vector <int> rank(V, 0);
       initSet(parent);
       int cost = 0;
+
       while(true){
         std::vector <std::pair<int, std::pair<int, int>>> cheapest(V, {-1, {-1, -1}});
         for(int i = 0; i < V; i++){
@@ -97,23 +129,26 @@ class Graph {
           int y = findSet(parent, v);
           if(x == y) continue;
           unionSetByRank(parent, rank, u, v);
-          mst[u].push_back({v, w});
-          mst[v].push_back({u, w});
+          addEdge(mst, u, v, w);
           cost += w;
           done = false;
         }
         if(done) break;
       }
-      printMST(cost);
+      printMST(cost, alg);
       reset();
     }
 
-    // Prim's algorithm
     void prim(int source){
+      alg = "Prim";
+
       std::vector <std::pair<int, std::pair<int, int>>> edges;
+      std::vector <bool> added(V, false);
+
       for(auto u : adj[source]){
         edges.push_back({u.second, {source, u.first}});
       }
+
       int cost = 0;
       added[source] = true;
       std::sort(edges.begin(), edges.end());
@@ -137,11 +172,12 @@ class Graph {
         std::sort(edges.begin(), edges.end());
       }
 
-      printMST(cost);
+      printMST(cost, alg);
       reset();
     }
 
-    void printMST(int cost){
+    void printMST(int cost, std::string &alg){
+      std::cout << "---" << alg << "---" << std::endl;
       std::cout << "Minimum spanning tree cost: " << cost << std::endl;
       for(int i = 0; i < V; i++){
         std::cout << "Vertex " << oneIndexedVertex(i) << " is connected to: ";
